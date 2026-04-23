@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laxmi Online Net Cafe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:    #ff6b35;
+      --orange-dk: #e04e18;
+      --orange-lt: #ff8f5e;
+      --bg:        #fdf6f0;
+      --surface:   #ffffff;
+      --text:      #1a1212;
+      --muted:     #7a6060;
+      --border:    #f0e0d6;
+      --shadow:    0 4px 24px rgba(255,107,53,.13);
+      --radius:    18px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── FADE-IN ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .7s cubic-bezier(.22,.68,0,1.2) both; }
+    .d1 { animation-delay: .05s; }
+    .d2 { animation-delay: .15s; }
+    .d3 { animation-delay: .25s; }
+    .d4 { animation-delay: .35s; }
+
+    /* ── STICKY HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, #ff6b35 0%, #ff9a3c 50%, #ffbd59 100%);
+      padding: 64px 24px 72px;
+      text-align: center;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.18) 0%, transparent 65%),
+                  radial-gradient(ellipse at 20% 80%, rgba(224,78,24,.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 40px;
+      background: var(--bg);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.35);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 16px rgba(0,0,0,.18);
+      letter-spacing: -.02em;
+      line-height: 1.15;
+    }
+    header p {
+      margin-top: 14px;
+      font-size: clamp(.9rem, 2.5vw, 1.1rem);
+      color: rgba(255,255,255,.88);
+      font-weight: 500;
+      letter-spacing: .02em;
+    }
+
+    /* When sticky: shrink header */
+    header.sticky-shrink {
+      padding: 18px 24px 24px;
+    }
+    header.sticky-shrink::after { display: none; }
+    header.sticky-shrink h1 { font-size: 1.35rem; }
+    header.sticky-shrink p, header.sticky-shrink .header-badge { display: none; }
+
+    /* ── SHARED SECTION STYLES ── */
+    section { padding: 64px 24px; }
+    .section-label {
+      display: inline-block;
+      font-family: 'Sora', sans-serif;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      background: rgba(255,107,53,.1);
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.025em;
+      line-height: 1.2;
+    }
+    .container { max-width: 1060px; margin: 0 auto; }
+
+    /* ── OWNERS SECTION ── */
+    #owners { background: var(--bg); text-align: center; }
+    .owners-card {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 52px;
+      margin-top: 36px;
+      box-shadow: var(--shadow);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .owners-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(255,107,53,.18);
+    }
+    .owners-avatars { display: flex; gap: -10px; }
+    .avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 3px solid var(--surface);
+      background: linear-gradient(135deg, var(--orange-lt), var(--orange-dk));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem;
+      box-shadow: 0 2px 10px rgba(255,107,53,.3);
+    }
+    .avatar:nth-child(2) { margin-left: -14px; background: linear-gradient(135deg, #ffbd59, var(--orange)); }
+    .owners-names {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .owners-names span {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--orange), var(--orange-dk));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .owners-divider {
+      width: 40px; height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--orange), #ffbd59);
+    }
+    .owners-sub { color: var(--muted); font-size: .9rem; }
+
+    /* ── SERVICES SECTION ── */
+    #services { background: linear-gradient(180deg, #fff8f4 0%, var(--bg) 100%); }
+    .services-header { text-align: center; margin-bottom: 44px; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.22,.68,0,1.2), box-shadow .3s;
+      cursor: default;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,.12), transparent 70%);
+      transition: transform .4s;
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(255,107,53,.16); }
+    .card:hover::before { transform: scale(1.6); }
+    .card-icon {
+      font-size: 2.4rem;
+      margin-bottom: 18px;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(255,107,53,.25));
+    }
+    .card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .card p { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+    .card-tag {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--orange);
+      background: rgba(255,107,53,.1);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* ── CONTACT SECTION ── */
+    #contact { background: var(--bg); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+      margin-top: 40px;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 18px; }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .info-row:hover { transform: translateX(6px); box-shadow: var(--shadow); }
+    .info-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .info-text strong {
+      display: block;
+      font-family: 'Sora', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+    .info-text span, .info-text a {
+      font-size: .97rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .info-text a:hover { color: var(--orange); }
+
+    .contact-map {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      box-shadow: var(--shadow);
+    }
+    .map-graphic {
+      width: 100%;
+      max-width: 240px;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #fff0e8, #ffe4d0);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-graphic::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 30%, rgba(255,107,53,.18), transparent 65%);
+    }
+    .map-graphic span { position: relative; z-index: 1; }
+    .contact-map h3 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .contact-map p { color: var(--muted); font-size: .88rem; }
+
+    .btn-call {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dk));
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(255,107,53,.35);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .btn-call:hover { transform: scale(1.05); box-shadow: 0 8px 28px rgba(255,107,53,.45); }
+
+    /* ── CTA SECTION ── */
+    #cta {
+      background: linear-gradient(135deg, var(--orange) 0%, #ff9a3c 50%, #ffbd59 100%);
+      padding: 80px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.2) 0%, transparent 60%),
+                  radial-gradient(ellipse at 10% 80%, rgba(200,60,0,.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #cta h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.15);
+      margin-bottom: 10px;
+    }
+    #cta p { color: rgba(255,255,255,.85); margin-bottom: 36px; font-size: 1rem; }
+
+    .btn-visit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      color: var(--orange-dk);
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 16px 40px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(0,0,0,.15);
+      transition: transform .25s cubic-bezier(.22,.68,0,1.4), box-shadow .25s;
+      position: relative; z-index: 1;
+    }
+    .btn-visit:hover { transform: scale(1.08); box-shadow: 0 8px 36px rgba(0,0,0,.22); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a0f0a;
+      color: rgba(255,255,255,.7);
+      text-align: center;
+      padding: 40px 24px;
+      font-size: .88rem;
+      line-height: 2;
+    }
+    footer strong { color: var(--orange-lt); font-family: 'Sora', sans-serif; }
+    .footer-divider { width: 48px; height: 2px; background: var(--orange); border-radius: 999px; margin: 18px auto; }
+    footer a { color: var(--orange-lt); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .contact-inner { grid-template-columns: 1fr; }
+      .owners-card { padding: 32px 28px; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 48px 16px; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header id="main-header">
+  <div class="header-badge fade-up d1">Est. Maregaon · Since 2020</div>
+  <h1 class="fade-up d2">🌐 Laxmi Online Net Cafe</h1>
+  <p class="fade-up d3">High-Speed Internet &nbsp;|&nbsp; Gaming &nbsp;|&nbsp; Printing &nbsp;|&nbsp; Services</p>
+</header>
+
+<!-- ── OWNERS SECTION ── -->
+<section id="owners">
+  <div class="container" style="text-align:center;">
+    <div class="section-label fade-up">Our Story</div>
+    <h2 class="section-title fade-up">Proud Owners</h2>
+    <div class="owners-card fade-up">
+      <div class="owners-avatars">
+        <div class="avatar">👨‍💼</div>
+        <div class="avatar">👨‍💼</div>
+      </div>
+      <div class="owners-divider"></div>
+      <div class="owners-names">
+        <span>Aniket Mafur</span> &amp; <span>Prashant Uike</span>
+      </div>
+      <p class="owners-sub">✨ Serving the community with reliable digital services since day one</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES SECTION ── -->
+<section id="services">
+  <div class="container">
+    <div class="services-header">
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Our Services</h2>
+      <p style="color:var(--muted);margin-top:10px;max-width:480px;margin-left:auto;margin-right:auto;font-size:.95rem;">
+        Everything you need under one roof — fast, affordable, and reliable.
+      </p>
+    </div>
+    <div class="services-grid">
+      <div class="card fade-up d1">
+        <span class="card-icon">🌐</span>
+        <h3>High-Speed Internet</h3>
+        <p>Blazing-fast browsing, seamless downloads, and buffer-free streaming for all your needs.</p>
+        <span class="card-tag">Available 8AM–11PM</span>
+      </div>
+      <div class="card fade-up d2">
+        <span class="card-icon">🎮</span>
+        <h3>Gaming Zone</h3>
+        <p>Play the latest games on powerful rigs. Join tournaments and compete with friends!</p>
+        <span class="card-tag">Tournaments Available</span>
+      </div>
+      <div class="card fade-up d3">
+        <span class="card-icon">🖨️</span>
+        <h3>Printing & Scanning</h3>
+        <p>Color & black-and-white prints, document scanning, and photocopying at great rates.</p>
+        <span class="card-tag">All Formats</span>
+      </div>
+      <div class="card fade-up d4">
+        <span class="card-icon">📱</span>
+        <h3>Mobile Recharge</h3>
+        <p>Recharge all networks, DTH connections, and pay utility bills — quick and easy.</p>
+        <span class="card-tag">All Networks</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT SECTION ── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Find Us</div>
+    <h2 class="section-title">Visit Us</h2>
+    <div class="contact-inner">
+      <div class="contact-info">
+        <div class="info-row">
+          <span class="info-icon">📍</span>
+          <div class="info-text">
+            <strong>Address</strong>
+            <span>Main Road, Maregaon</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <span class="info-icon">🕗</span>
+          <div class="info-text">
+            <strong>Shop Timings</strong>
+            <span>Open: 8 AM – 11 PM &nbsp;(7 days a week)</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <span class="info-icon">📞</span>
+          <div class="info-text">
+            <strong>Phone Number</strong>
+            <a href="tel:+917123456789">+91 7123-456-789</a>
+          </div>
+        </div>
+        <a href="tel:+917123456789" class="btn-call">
+          📲 &nbsp;Call Now
+        </a>
+      </div>
+
+      <div class="contact-map">
+        <div class="map-graphic">
+          <span>🗺️</span>
+          <span style="font-size:1rem;font-family:'Sora',sans-serif;font-weight:700;color:var(--orange);">Maregaon</span>
+        </div>
+        <h3>Laxmi Online Net Cafe</h3>
+        <p>Main Road, Maregaon<br>Easy to find, hard to forget 😊</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA SECTION ── -->
+<section id="cta">
+  <div class="container">
+    <h2>Ready to Connect? 🚀</h2>
+    <p>Come in, sit down, and experience the fastest internet in town.</p>
+    <a href="#contact" class="btn-visit">🌟 &nbsp;Visit Today</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>🌐 Laxmi Online Net Cafe</strong>
+  <div class="footer-divider"></div>
+  <div>© 2024 Laxmi Online Net Cafe &nbsp;|&nbsp; Main Road, Maregaon</div>
+  <div>Owned by <strong>Aniket Mafur &amp; Prashant Uike</strong></div>
+  <div>Contact: <a href="tel:+917123456789">+91 7123-456-789</a></div>
+</footer>
+
+<script>
+  // Sticky header shrink
+  const hdr = document.getElementById('main-header');
+  window.addEventListener('scroll', () => {
+    hdr.classList.toggle('sticky-shrink', window.scrollY > 80);
+  });
+
+  // Fade-up on scroll via IntersectionObserver
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.card, .info-row, .contact-map, .owners-card').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    el.classList.add('fade-up');
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
